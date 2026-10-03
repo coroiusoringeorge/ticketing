@@ -6,14 +6,13 @@ const scryptAsync = promisify(scrypt);
 
 
 export class Password {
-  /**
-   * Hashes a password, using a salt.
-   */
   static async toHash(password: string) {
+    // 1. Generate 8 random bytes and convert them to a hex string (16 hex characters)
     const salt = randomBytes(8).toString('hex');
+    // 2. Hash the plain text password with the generated salt to create a 64-byte key
     const buf = (await scryptAsync(password, salt, 64)) as Buffer;
 
-    // return the hashed password and the salt
+    // 3. Combine the hashed key and salt separated by a dot and return
     return `${buf.toString('hex')}.${salt}`;
   }
 

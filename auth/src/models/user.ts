@@ -16,6 +16,7 @@ interface UserModel extends mongoose.Model<UserDoc> {
 interface UserDoc extends mongoose.Document {
   email: string;
   password: string;
+  id: string;
 }
 
 // mongoose schema for a User document
@@ -28,6 +29,15 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+}, {
+  toJSON: {
+    transform(doc: any, ret: any) {
+      ret.id = ret._id;
+      delete ret._id;
+      delete ret.password;
+      delete ret.__v;
+    }
+  }
 });
 
 // pre-save hook to hash the password before saving the user
